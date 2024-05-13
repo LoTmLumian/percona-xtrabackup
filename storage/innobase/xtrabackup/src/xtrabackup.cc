@@ -3888,6 +3888,14 @@ xb_load_single_table_tablespaces(bool (*pred)(const char*, const char*))
 				is_remote = is_remote_tablespace_name(
 					fileinfo.name);
 
+#ifdef UNIV_DEBUG
+				if (is_tablespace &&
+					!strcmp(fileinfo.name, "rename_test.ibd")) {
+					debug_sync_point("rename_before_load_tablespaces");
+					goto next_file_item;
+				}
+#endif
+
 				/* We found a symlink or a file */
 				if (is_tablespace
 				    && (!pred
